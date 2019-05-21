@@ -42,6 +42,9 @@ defmodule Exoffice.Parser.Excel2003.String do
     convert_encoding(string, "UTF-16LE", "UTF-8")
   end
 
+  def encode_utf_16("", true) do
+    encode_utf_16("X", true)
+  end
   def encode_utf_16(string, true) do
     string
     |> uncompress_byte_string

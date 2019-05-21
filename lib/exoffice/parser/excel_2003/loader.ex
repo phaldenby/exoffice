@@ -85,13 +85,12 @@ defmodule Exoffice.Parser.Excel2003.Loader do
   end
 
   defp parse_sheets(%__MODULE__{sst_tid: sst_tid} = loader, excel, sheet) do
-    sheets = if is_nil(sheet), do: excel.sheets, else: [Enum.at(excel.sheets, sheet)]
+    # sheets = if is_nil(sheet), do: excel.sheets, else: [Enum.at(excel.sheets, sheet)]
+    sheets = excel.sheets
 
     pids =
       sheets
-      |> Enum.filter(fn %{sheet_type: type} ->
-        type == <<0>>
-      end)
+      # |> Enum.filter(fn %{sheet_type: type} -> type == <<0>> end)
       |> Enum.map(fn sheet ->
         table_id = GenServer.call(StateManager, :new_table)
         parse_sheet_part(loader, sheet.offset, excel, table_id)
@@ -640,7 +639,7 @@ defmodule Exoffice.Parser.Excel2003.Loader do
           true ->
             # list of formatting runs
             fmt_runs =
-              Enum.reduce(0..(formatting_runs - 1), [], fn i, acc ->
+              Enum.reduce(0..(formatting_runs - 1), fn i, acc ->
                 # first formatted character; zero-based
                 char_pos = OLE.get_int_2d(record_data, pos + i * 4)
 
